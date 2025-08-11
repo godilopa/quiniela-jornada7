@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiniela Jornada 1</title>
+  <script>
+    function enviarQuiniela() {
+      const data = {
+        tipo: document.querySelector('input[name="tipo"]:checked')?.value || "",
+        partidos: []
+      };
+
+      for (let i = 1; i <= 15; i++) {
+        const tipo = document.querySelector(`input[name="tipo_${i}"]:checked`)?.value || "";
+        const opciones = Array.from(document.querySelectorAll(`input[name="opciones_${i}[]"]:checked`)).map(el => el.value);
+        const base = document.querySelector(`input[name="base_${i}"]:checked`)?.value || "";
+        data.partidos.push({ partido: i, tipo, opciones, base });
+      }
+
+      fetch("YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL", {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      alert("¡Quiniela enviada!");
+    }
+  </script>
+</head>
+<body>
+  <h1>Quiniela Jornada 1</h1>
+  <form onsubmit="event.preventDefault(); enviarQuiniela();">
+    <h2>Selecciona el tipo de quiniela</h2>
+    <label><input type="radio" name="tipo" value="1 triple + 7 dobles"> 1 triple + 7 dobles</label><br>
+    <label><input type="radio" name="tipo" value="2 triples + 6 dobles"> 2 triples + 6 dobles</label><br>
+    <label><input type="radio" name="tipo" value="0 triples + 6 dobles"> 0 triples + 6 dobles</label><br>
+    <label><input type="radio" name="tipo" value="1 triple + 5 dobles"> 1 triple + 5 dobles</label><br>
+
+    <hr>
+    <h2>Partidos</h2>
+
+    <fieldset>
+      <legend>Partido 1</legend>
+      <label><input type="radio" name="tipo_1" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_1" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_1" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_1[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_1[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_1[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_1" value="1"> 1</label>
+      <label><input type="radio" name="base_1" value="X"> X</label>
+      <label><input type="radio" name="base_1" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 2</legend>
+      <label><input type="radio" name="tipo_2" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_2" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_2" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_2[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_2[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_2[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_2" value="1"> 1</label>
+      <label><input type="radio" name="base_2" value="X"> X</label>
+      <label><input type="radio" name="base_2" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 3</legend>
+      <label><input type="radio" name="tipo_3" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_3" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_3" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_3[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_3[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_3[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_3" value="1"> 1</label>
+      <label><input type="radio" name="base_3" value="X"> X</label>
+      <label><input type="radio" name="base_3" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 4</legend>
+      <label><input type="radio" name="tipo_4" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_4" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_4" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_4[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_4[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_4[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_4" value="1"> 1</label>
+      <label><input type="radio" name="base_4" value="X"> X</label>
+      <label><input type="radio" name="base_4" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 5</legend>
+      <label><input type="radio" name="tipo_5" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_5" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_5" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_5[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_5[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_5[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_5" value="1"> 1</label>
+      <label><input type="radio" name="base_5" value="X"> X</label>
+      <label><input type="radio" name="base_5" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 6</legend>
+      <label><input type="radio" name="tipo_6" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_6" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_6" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_6[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_6[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_6[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_6" value="1"> 1</label>
+      <label><input type="radio" name="base_6" value="X"> X</label>
+      <label><input type="radio" name="base_6" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 7</legend>
+      <label><input type="radio" name="tipo_7" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_7" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_7" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_7[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_7[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_7[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_7" value="1"> 1</label>
+      <label><input type="radio" name="base_7" value="X"> X</label>
+      <label><input type="radio" name="base_7" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 8</legend>
+      <label><input type="radio" name="tipo_8" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_8" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_8" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_8[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_8[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_8[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_8" value="1"> 1</label>
+      <label><input type="radio" name="base_8" value="X"> X</label>
+      <label><input type="radio" name="base_8" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 9</legend>
+      <label><input type="radio" name="tipo_9" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_9" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_9" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_9[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_9[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_9[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_9" value="1"> 1</label>
+      <label><input type="radio" name="base_9" value="X"> X</label>
+      <label><input type="radio" name="base_9" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 10</legend>
+      <label><input type="radio" name="tipo_10" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_10" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_10" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_10[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_10[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_10[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_10" value="1"> 1</label>
+      <label><input type="radio" name="base_10" value="X"> X</label>
+      <label><input type="radio" name="base_10" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 11</legend>
+      <label><input type="radio" name="tipo_11" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_11" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_11" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_11[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_11[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_11[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_11" value="1"> 1</label>
+      <label><input type="radio" name="base_11" value="X"> X</label>
+      <label><input type="radio" name="base_11" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 12</legend>
+      <label><input type="radio" name="tipo_12" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_12" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_12" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_12[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_12[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_12[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_12" value="1"> 1</label>
+      <label><input type="radio" name="base_12" value="X"> X</label>
+      <label><input type="radio" name="base_12" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 13</legend>
+      <label><input type="radio" name="tipo_13" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_13" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_13" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_13[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_13[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_13[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_13" value="1"> 1</label>
+      <label><input type="radio" name="base_13" value="X"> X</label>
+      <label><input type="radio" name="base_13" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 14</legend>
+      <label><input type="radio" name="tipo_14" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_14" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_14" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_14[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_14[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_14[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_14" value="1"> 1</label>
+      <label><input type="radio" name="base_14" value="X"> X</label>
+      <label><input type="radio" name="base_14" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <fieldset>
+      <legend>Partido 15</legend>
+      <label><input type="radio" name="tipo_15" value="simple"> Simple</label>
+      <label><input type="radio" name="tipo_15" value="doble"> Doble</label>
+      <label><input type="radio" name="tipo_15" value="triple"> Triple</label><br>
+
+      <strong>Opciones:</strong><br>
+      <label><input type="checkbox" name="opciones_15[]" value="1"> 1</label>
+      <label><input type="checkbox" name="opciones_15[]" value="X"> X</label>
+      <label><input type="checkbox" name="opciones_15[]" value="2"> 2</label><br>
+
+      <strong>Resultado base:</strong><br>
+      <label><input type="radio" name="base_15" value="1"> 1</label>
+      <label><input type="radio" name="base_15" value="X"> X</label>
+      <label><input type="radio" name="base_15" value="2"> 2</label>
+    </fieldset>
+    <br>
+    
+    <button type="submit">Enviar Quiniela</button>
+  </form>
+</body>
+</html>
