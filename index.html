@@ -1,319 +1,285 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Quiniela Jornada 1</title>
-  <script>
-    function enviarQuiniela() {
-      const data = {
-        tipo: document.querySelector('input[name="tipo"]:checked')?.value || "",
-        partidos: []
-      };
-
-      for (let i = 1; i <= 15; i++) {
-        const tipo = document.querySelector(`input[name="tipo_${i}"]:checked`)?.value || "";
-        const opciones = Array.from(document.querySelectorAll(`input[name="opciones_${i}[]"]:checked`)).map(el => el.value);
-        const base = document.querySelector(`input[name="base_${i}"]:checked`)?.value || "";
-        data.partidos.push({ partido: i, tipo, opciones, base });
-      }
-
-      fetch("https://script.google.com/macros/s/AKfycbwe6b0AtzjuoFNDJYgrB6RNPgi2ycQr66G7jKgmjuwTEcttjYKIP71MVel3SV9kKcSG/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      alert("¡Quiniela enviada!");
-    }
-  </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiniela — Jornada 1</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:20px;background:#f7fafc}
+    .card{background:#fff;padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(10,10,10,0.06);margin-bottom:16px}
+    h1{margin-top:0}
+    table{width:100%;border-collapse:collapse}
+    th,td{border:1px solid #e6e6e6;padding:8px;text-align:center}
+    select,input{padding:6px;border-radius:6px;border:1px solid #ddd}
+    .small{font-size:13px;color:#555}
+    .error{color:#b00020}
+    .success{color:green}
+    button{padding:10px 14px;border-radius:8px;border:0;background:#0ea5a4;color:#fff;cursor:pointer}
+  </style>
 </head>
 <body>
-  <h1>Quiniela Jornada 1</h1>
-  <form onsubmit="event.preventDefault(); enviarQuiniela();">
-    <h2>Selecciona el tipo de quiniela</h2>
-    <label><input type="radio" name="tipo" value="1 triple + 7 dobles"> 1 triple + 7 dobles</label><br>
-    <label><input type="radio" name="tipo" value="2 triples + 6 dobles"> 2 triples + 6 dobles</label><br>
-    <label><input type="radio" name="tipo" value="0 triples + 6 dobles"> 0 triples + 6 dobles</label><br>
-    <label><input type="radio" name="tipo" value="1 triple + 5 dobles"> 1 triple + 5 dobles</label><br>
+  <div class="card">
+    <h1>Quiniela — Jornada 1</h1>
+    <p class="small">He corregido la lista de partidos según la composición oficial de boletos (SELAE / "Próximas jornadas deportivas"). Si quieres que cambie algún equipo o cargar otra jornada, dímelo.</p>
 
-    <hr>
-    <h2>Partidos</h2>
+    <label>Tipo de quiniela:
+      <select id="tipoQuiniela">
+        <option value="12_1t_7d">Reducida al 12 — 1 triple y 7 dobles</option>
+        <option value="12_2t_6d">Reducida al 12 — 2 triples y 6 dobles</option>
+        <option value="13_0t_6d">Reducida al 13 — 0 triples y 6 dobles</option>
+        <option value="13_1t_6d">Reducida al 13 — 1 triple y 6 dobles</option>
+      </select>
+    </label>
 
-    <fieldset>
-      <legend>Partido 1</legend>
-      <label><input type="radio" name="tipo_1" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_1" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_1" value="triple"> Triple</label><br>
+    <div style="overflow:auto;margin-top:12px">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Partido</th>
+            <th>Tipo</th>
+            <th>1</th>
+            <th>X</th>
+            <th>2</th>
+            <th>Base</th>
+          </tr>
+        </thead>
+        <tbody id="matchesBody"></tbody>
+      </table>
+    </div>
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_1[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_1[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_1[]" value="2"> 2</label><br>
+    <div class="card" style="margin-top:12px">
+      <h3>Pleno al 15 — Elche vs Betis (elige goles para cada equipo)</h3>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div>
+          <div class="small">Local (Elche)</div>
+          <select id="plenoLocal">
+            <option value="">--</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="M">M</option>
+          </select>
+        </div>
+        <div>
+          <div class="small">Visitante (Real Betis)</div>
+          <select id="plenoVisitante">
+            <option value="">--</option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="M">M</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_1" value="1"> 1</label>
-      <label><input type="radio" name="base_1" value="X"> X</label>
-      <label><input type="radio" name="base_1" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 2</legend>
-      <label><input type="radio" name="tipo_2" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_2" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_2" value="triple"> Triple</label><br>
+    <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+      <button id="sendBtn">Enviar a Google Sheets</button>
+      <div id="status" class="small"></div>
+    </div>
+  </div>
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_2[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_2[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_2[]" value="2"> 2</label><br>
+<script>
+// === PARTIDOS oficiales (Jornada 1) ===
+// Fuente: SELAE - "Proximas_jornadas_deportivas.pdf" (Composición de boletos - Jornada 1).
+const matches = [
+  {id:1, home:'Girona', away:'Rayo Vallecano'},
+  {id:2, home:'Villarreal', away:'Real Oviedo'},
+  {id:3, home:'Deportivo Alavés', away:'Levante UD'},
+  {id:4, home:'Mallorca', away:'FC Barcelona'},
+  {id:5, home:'Valencia CF', away:'Real Sociedad'},
+  {id:6, home:'Celta de Vigo', away:'Getafe CF'},
+  {id:7, home:'Athletic Club', away:'Sevilla FC'},
+  {id:8, home:'RCD Espanyol', away:'Atlético de Madrid'},
+  {id:9, home:'Racing Santander', away:'CD Castellón'},
+  {id:10, home:'Málaga CF', away:'SD Eibar'},
+  {id:11, home:'Granada CF', away:'Deportivo de La Coruña'},
+  {id:12, home:'Cádiz CF', away:'CD Mirandés'},
+  {id:13, home:'SD Huesca', away:'CD Leganés'},
+  {id:14, home:'UD Las Palmas', away:'FC Andorra'},
+  // 15 es Pleno al 15: Elche - Real Betis
+  {id:15, home:'Elche CF', away:'Real Betis'}
+];
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_2" value="1"> 1</label>
-      <label><input type="radio" name="base_2" value="X"> X</label>
-      <label><input type="radio" name="base_2" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 3</legend>
-      <label><input type="radio" name="tipo_3" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_3" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_3" value="triple"> Triple</label><br>
+const matchesBody = document.getElementById('matchesBody');
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_3[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_3[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_3[]" value="2"> 2</label><br>
+function buildTable(){
+  matchesBody.innerHTML = '';
+  // render only 1..14 as filas normales; la 15 queda para Pleno
+  matches.slice(0,14).forEach(m => {
+    const tr = document.createElement('tr');
+    tr.dataset.id = m.id;
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_3" value="1"> 1</label>
-      <label><input type="radio" name="base_3" value="X"> X</label>
-      <label><input type="radio" name="base_3" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 4</legend>
-      <label><input type="radio" name="tipo_4" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_4" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_4" value="triple"> Triple</label><br>
+    tr.innerHTML = `
+      <td>${m.id}</td>
+      <td style="text-align:left">${m.home} - ${m.away}</td>
+      <td>
+        <select class="tipo">
+          <option value="S">Simple</option>
+          <option value="D">Doble</option>
+          <option value="T">Triple</option>
+        </select>
+      </td>
+      <td><input type="checkbox" class="opt" value="1"></td>
+      <td><input type="checkbox" class="opt" value="X"></td>
+      <td><input type="checkbox" class="opt" value="2"></td>
+      <td>
+        <select class="base" disabled>
+          <option value="">--</option>
+        </select>
+      </td>
+    `;
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_4[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_4[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_4[]" value="2"> 2</label><br>
+    matchesBody.appendChild(tr);
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_4" value="1"> 1</label>
-      <label><input type="radio" name="base_4" value="X"> X</label>
-      <label><input type="radio" name="base_4" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 5</legend>
-      <label><input type="radio" name="tipo_5" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_5" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_5" value="triple"> Triple</label><br>
+    // attach listeners
+    const checkboxes = tr.querySelectorAll('input.opt');
+    const tipoSel = tr.querySelector('select.tipo');
+    const baseSel = tr.querySelector('select.base');
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_5[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_5[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_5[]" value="2"> 2</label><br>
+    // when tipo changes, enforce limits
+    tipoSel.addEventListener('change', ()=>{
+      enforceLimits(tr);
+      updateBase(tr);
+    });
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_5" value="1"> 1</label>
-      <label><input type="radio" name="base_5" value="X"> X</label>
-      <label><input type="radio" name="base_5" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 6</legend>
-      <label><input type="radio" name="tipo_6" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_6" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_6" value="triple"> Triple</label><br>
+    // when any checkbox changes
+    checkboxes.forEach(cb => cb.addEventListener('change', ()=>{
+      // auto-update tipo according to number of checked
+      const checkedCount = tr.querySelectorAll('input.opt:checked').length;
+      if(checkedCount >= 3) tipoSel.value = 'T';
+      else if(checkedCount === 2) tipoSel.value = 'D';
+      else if(checkedCount <= 1) tipoSel.value = 'S';
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_6[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_6[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_6[]" value="2"> 2</label><br>
+      enforceLimits(tr);
+      updateBase(tr);
+    }));
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_6" value="1"> 1</label>
-      <label><input type="radio" name="base_6" value="X"> X</label>
-      <label><input type="radio" name="base_6" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 7</legend>
-      <label><input type="radio" name="tipo_7" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_7" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_7" value="triple"> Triple</label><br>
+  });
+}
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_7[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_7[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_7[]" value="2"> 2</label><br>
+function enforceLimits(tr){
+  const tipo = tr.querySelector('select.tipo').value;
+  const boxes = Array.from(tr.querySelectorAll('input.opt'));
+  const checked = boxes.filter(b=>b.checked);
+  if(tipo === 'S'){
+    // keep only the first checked
+    if(checked.length > 1){
+      boxes.forEach((b,i)=> b.checked = (i===0 && checked.includes(b)) );
+    }
+  } else if(tipo === 'D'){
+    if(checked.length > 2){
+      let kept = 0;
+      boxes.forEach(b=>{ if(b.checked){ if(kept < 2){ kept++; } else { b.checked = false; } } });
+    }
+  } // T allows all
+}
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_7" value="1"> 1</label>
-      <label><input type="radio" name="base_7" value="X"> X</label>
-      <label><input type="radio" name="base_7" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 8</legend>
-      <label><input type="radio" name="tipo_8" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_8" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_8" value="triple"> Triple</label><br>
+function updateBase(tr){
+  const boxes = Array.from(tr.querySelectorAll('input.opt'));
+  const checked = boxes.filter(b=>b.checked).map(b=>b.value);
+  const baseSel = tr.querySelector('select.base');
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_8[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_8[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_8[]" value="2"> 2</label><br>
+  // rebuild options
+  baseSel.innerHTML = '';
+  if(checked.length === 0){
+    baseSel.disabled = true;
+    const o = document.createElement('option'); o.value=''; o.textContent='--'; baseSel.appendChild(o);
+    return;
+  }
+  // add options from checked
+  const empty = document.createElement('option'); empty.value=''; empty.textContent='--'; baseSel.appendChild(empty);
+  checked.forEach(v=>{ const o = document.createElement('option'); o.value = v; o.textContent = v; baseSel.appendChild(o); });
+  baseSel.disabled = false;
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_8" value="1"> 1</label>
-      <label><input type="radio" name="base_8" value="X"> X</label>
-      <label><input type="radio" name="base_8" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 9</legend>
-      <label><input type="radio" name="tipo_9" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_9" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_9" value="triple"> Triple</label><br>
+  // auto-select base when applicable: if only one checked -> pick it
+  if(checked.length === 1){ baseSel.value = checked[0]; }
+  // if previous value still valid, keep it
+  else if(!checked.includes(baseSel.value)) baseSel.value = '';
+}
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_9[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_9[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_9[]" value="2"> 2</label><br>
+// build UI
+buildTable();
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_9" value="1"> 1</label>
-      <label><input type="radio" name="base_9" value="X"> X</label>
-      <label><input type="radio" name="base_9" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 10</legend>
-      <label><input type="radio" name="tipo_10" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_10" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_10" value="triple"> Triple</label><br>
+// === Envío y validaciones ===
+const mapping = {
+  '12_1t_7d':{triples:1,doubles:7},
+  '12_2t_6d':{triples:2,doubles:6},
+  '13_0t_6d':{triples:0,doubles:6},
+  '13_1t_6d':{triples:1,doubles:6}
+};
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_10[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_10[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_10[]" value="2"> 2</label><br>
+document.getElementById('sendBtn').addEventListener('click', async ()=>{
+  const tipoQuiniela = document.getElementById('tipoQuiniela').value;
+  const expected = mapping[tipoQuiniela];
+  const rows = Array.from(document.querySelectorAll('#matchesBody tr'));
+  let triples = 0, doubles = 0;
+  const entries = [];
+  const errors = [];
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_10" value="1"> 1</label>
-      <label><input type="radio" name="base_10" value="X"> X</label>
-      <label><input type="radio" name="base_10" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 11</legend>
-      <label><input type="radio" name="tipo_11" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_11" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_11" value="triple"> Triple</label><br>
+  rows.forEach(tr=>{
+    const id = tr.dataset.id;
+    const matchText = tr.querySelector('td:nth-child(2)').textContent;
+    const tipo = tr.querySelector('select.tipo').value;
+    const selections = Array.from(tr.querySelectorAll('input.opt:checked')).map(cb=>cb.value);
+    const base = tr.querySelector('select.base').value;
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_11[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_11[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_11[]" value="2"> 2</label><br>
+    if(tipo === 'T') triples++;
+    if(tipo === 'D') doubles++;
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_11" value="1"> 1</label>
-      <label><input type="radio" name="base_11" value="X"> X</label>
-      <label><input type="radio" name="base_11" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 12</legend>
-      <label><input type="radio" name="tipo_12" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_12" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_12" value="triple"> Triple</label><br>
+    // checks
+    if(selections.length === 0) errors.push(`Partido ${id} (${matchText}): selecciona al menos una opción.`);
+    if(tipo === 'S' && selections.length !== 1) errors.push(`Partido ${id}: marcado como SIMPLE pero debe tener 1 selección.`);
+    if(tipo === 'D' && selections.length !== 2) errors.push(`Partido ${id}: marcado como DOBLE pero debe tener 2 selecciones.`);
+    if(tipo === 'T' && selections.length !== 3) errors.push(`Partido ${id}: marcado como TRIPLE pero debe tener 3 selecciones.`);
+    if(!base) errors.push(`Partido ${id}: la columna Base debe estar establecida.`);
+    if(base && !selections.includes(base)) errors.push(`Partido ${id}: la Base (${base}) no coincide con las selecciones.`);
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_12[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_12[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_12[]" value="2"> 2</label><br>
+    entries.push({id, match: matchText, tipo, selections, base});
+  });
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_12" value="1"> 1</label>
-      <label><input type="radio" name="base_12" value="X"> X</label>
-      <label><input type="radio" name="base_12" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 13</legend>
-      <label><input type="radio" name="tipo_13" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_13" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_13" value="triple"> Triple</label><br>
+  // validate triples/doubles count
+  if(triples !== expected.triples) errors.push(`Se esperaban ${expected.triples} triples pero hay ${triples}.`);
+  if(doubles !== expected.doubles) errors.push(`Se esperaban ${expected.doubles} dobles pero hay ${doubles}.`);
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_13[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_13[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_13[]" value="2"> 2</label><br>
+  // pleno
+  const plenoLocal = document.getElementById('plenoLocal').value;
+  const plenoVisitante = document.getElementById('plenoVisitante').value;
+  if(!plenoLocal) errors.push('Pleno al 15: elige los goles del equipo local (Elche).');
+  if(!plenoVisitante) errors.push('Pleno al 15: elige los goles del equipo visitante (Real Betis).');
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_13" value="1"> 1</label>
-      <label><input type="radio" name="base_13" value="X"> X</label>
-      <label><input type="radio" name="base_13" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 14</legend>
-      <label><input type="radio" name="tipo_14" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_14" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_14" value="triple"> Triple</label><br>
+  const status = document.getElementById('status');
+  if(errors.length){ status.innerHTML = `<span class="error">${errors.join('<br>')}</span>`; return; }
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_14[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_14[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_14[]" value="2"> 2</label><br>
+  // payload
+  const payload = {
+    tipoQuiniela,
+    expected,
+    summary:{triples,doubles},
+    entries,
+    pleno15:{ local:plenoLocal, away:plenoVisitante }
+  };
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_14" value="1"> 1</label>
-      <label><input type="radio" name="base_14" value="X"> X</label>
-      <label><input type="radio" name="base_14" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <fieldset>
-      <legend>Partido 15</legend>
-      <label><input type="radio" name="tipo_15" value="simple"> Simple</label>
-      <label><input type="radio" name="tipo_15" value="doble"> Doble</label>
-      <label><input type="radio" name="tipo_15" value="triple"> Triple</label><br>
+  status.textContent = 'Enviando...';
 
-      <strong>Opciones:</strong><br>
-      <label><input type="checkbox" name="opciones_15[]" value="1"> 1</label>
-      <label><input type="checkbox" name="opciones_15[]" value="X"> X</label>
-      <label><input type="checkbox" name="opciones_15[]" value="2"> 2</label><br>
+	fetch('https://script.google.com/macros/s/AKfycbzA-qEJGAXOrvyrGAPHIb_XpeeKfrc1sQDWgz2yTSaBliALKO--JlAiWs1yDycOQ0Jh/exec', {
+	  method: 'POST',
+	  mode: 'cors',
+	  // You can remove the 'Content-Type' header entirely
+	  // and send the data as a simple object.
+	  // Alternatively, if the Apps Script expects form data, you'd use a different approach.
+	  body: JSON.stringify({ tipoQuiniela, partidos: entries, pleno15: { local: plenoLocal, visitante: plenoVisitante } })
+	})
+	.then(r => r.json())
+	.then(resp => {
+	  // ... (rest of the code)
+	})
+	.catch(err => {
+	  // ... (rest of the code)
+	});
+});
 
-      <strong>Resultado base:</strong><br>
-      <label><input type="radio" name="base_15" value="1"> 1</label>
-      <label><input type="radio" name="base_15" value="X"> X</label>
-      <label><input type="radio" name="base_15" value="2"> 2</label>
-    </fieldset>
-    <br>
-    
-    <button type="submit">Enviar Quiniela</button>
-  </form>
+</script>
 </body>
 </html>
