@@ -272,10 +272,10 @@ document.getElementById('sendBtn').addEventListener('click', async ()=>{
 	})
 	.then(r => r.json())
 	.then(resp => {
-	  // ... (rest of the code)
+	  status.textContent = 'Enviado'
 	})
 	.catch(err => {
-	  // ... (rest of the code)
+	  status.textContent = err.Message
 	});
 });
 
