@@ -11,7 +11,7 @@
     table{width:100%;border-collapse:collapse}
     th,td{border:1px solid #e6e6e6;padding:8px;text-align:center}
     select,input{padding:6px;border-radius:6px;border:1px solid #ddd}
-    .small{font-size:13px;color:#555}
+    .small{font-size:13px;color:#555'}
     .error{color:#b00020}
     .success{color:green}
     button{padding:10px 14px;border-radius:8px;border:0;background:#0ea5a4;color:#fff;cursor:pointer}
@@ -23,10 +23,16 @@
 
     <label>Tipo de quiniela:
       <select id="tipoQuiniela">
-        <option value="12_1t_7d">Reducida al 12 — 1 triple y 7 dobles</option>
-        <option value="12_2t_6d">Reducida al 12 — 2 triples y 6 dobles</option>
-        <option value="13_0t_6d">Reducida al 13 — 0 triples y 6 dobles</option>
-        <option value="13_1t_6d">Reducida al 13 — 1 triple y 6 dobles</option>
+        <!-- Reducción al 13 con columna base -->
+        <option value="13_1t_5d">Reducida al 13 — 1 triple y 5 dobles (con columna base)</option>
+        <option value="13_0t_7d">Reducida al 13 — 0 triples y 7 dobles (con columna base)</option>
+
+        <!-- Reducción al 12 con columna base -->
+        <option value="12_0t_9d">Reducida al 12 — 0 triples y 9 dobles (con columna base)</option>
+        <option value="12_0t_10d">Reducida al 12 — 0 triples y 10 dobles (con columna base)</option>
+        <option value="12_2t_6d">Reducida al 12 — 2 triples y 6 dobles (con columna base)</option>
+        <option value="12_2t_5d">Reducida al 12 — 2 triples y 5 dobles (con columna base)</option>
+        <option value="12_5t_2d">Reducida al 12 — 5 triples y 2 dobles (con columna base)</option>
       </select>
     </label>
 
@@ -81,7 +87,6 @@
 
 <script>
 // === PARTIDOS oficiales (Jornada 1) ===
-// Fuente: SELAE - "Proximas_jornadas_deportivas.pdf" (Composición de boletos - Jornada 1).
 const matches = [
   {id:1, home:'Girona', away:'Rayo Vallecano'},
   {id:2, home:'Villarreal', away:'Real Oviedo'},
@@ -165,7 +170,8 @@ function enforceLimits(tr){
   if(tipo === 'S'){
     // keep only the first checked
     if(checked.length > 1){
-      boxes.forEach((b,i)=> b.checked = (i===0 && checked.includes(b)) );
+      let kept = 0;
+      boxes.forEach(b=>{ if(b.checked){ if(kept === 0){ kept = 1; } else { b.checked = false; } } });
     }
   } else if(tipo === 'D'){
     if(checked.length > 2){
@@ -202,11 +208,18 @@ function updateBase(tr){
 buildTable();
 
 // === Envío y validaciones ===
+// mapeo de combinaciones soportadas (triples, dobles)
 const mapping = {
-  '12_1t_7d':{triples:1,doubles:7},
-  '12_2t_6d':{triples:2,doubles:6},
-  '13_0t_6d':{triples:0,doubles:6},
-  '13_1t_6d':{triples:1,doubles:6}
+  // Reducción al 13 (columna base)
+  '13_1t_5d': {triples:1, doubles:5},
+  '13_0t_7d': {triples:0, doubles:7},
+
+  // Reducción al 12 (columna base) - opciones solicitadas (únicas)
+  '12_0t_9d':  {triples:0, doubles:9},
+  '12_0t_10d': {triples:0, doubles:10},
+  '12_2t_6d':  {triples:2, doubles:6},
+  '12_2t_5d':  {triples:2, doubles:5},
+  '12_5t_2d':  {triples:5, doubles:2}
 };
 
 document.getElementById('sendBtn').addEventListener('click', async ()=>{
@@ -238,9 +251,14 @@ document.getElementById('sendBtn').addEventListener('click', async ()=>{
     entries.push({id, match: matchText, tipo, selections, base});
   });
 
-  // validate triples/doubles count
-  if(triples !== expected.triples) errors.push(`Se esperaban ${expected.triples} triples pero hay ${triples}.`);
-  if(doubles !== expected.doubles) errors.push(`Se esperaban ${expected.doubles} dobles pero hay ${doubles}.`);
+  // valida que exista mapping para la opción seleccionada
+  if(!expected){
+    errors.push('Tipo de quiniela no reconocido o no mapeado. Revisa la selección.');
+  } else {
+    // validate triples/doubles count
+    if(triples !== expected.triples) errors.push(`Se esperaban ${expected.triples} triples pero hay ${triples}.`);
+    if(doubles !== expected.doubles) errors.push(`Se esperaban ${expected.doubles} dobles pero hay ${doubles}.`);
+  }
 
   // pleno
   const plenoLocal = document.getElementById('plenoLocal').value;
@@ -262,15 +280,12 @@ document.getElementById('sendBtn').addEventListener('click', async ()=>{
 
   status.textContent = 'Enviando...';
 
-	fetch('https://script.google.com/macros/s/AKfycbzTxXmiAfGi5dEKW4nWjn2ruVkC6ynAm0fI5ovHFXbajXqdtmyXqEkdx8Tb-CQhUJFb/exec', {
-	  method: 'POST',
-	  mode: 'cors',
-	  // You can remove the 'Content-Type' header entirely
-	  // and send the data as a simple object.
-	  // Alternatively, if the Apps Script expects form data, you'd use a different approach.
-	  body: JSON.stringify({ tipoQuiniela, partidos: entries, pleno15: { local: plenoLocal, visitante: plenoVisitante } })
-	})
-	.then(r => {
+  fetch('https://script.google.com/macros/s/AKfycbzTxXmiAfGi5dEKW4nWjn2ruVkC6ynAm0fI5ovHFXbajXqdtmyXqEkdx8Tb-CQhUJFb/exec', {
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify({ tipoQuiniela, partidos: entries, pleno15: { local: plenoLocal, visitante: plenoVisitante } })
+  })
+  .then(r => {
     if (!r.ok) throw new Error('Error HTTP: ' + r.status);
     return r.json();
   })
