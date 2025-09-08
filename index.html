@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Quiniela — Jornada 3</title>
+  <title>Quiniela — Jornada 5</title>
   <style>
     body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:20px;background:#f7fafc}
     .card{background:#fff;padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(10,10,10,0.06);margin-bottom:16px}
@@ -19,7 +19,7 @@
 </head>
 <body>
   <div class="card">
-    <h1>Quiniela — Jornada 3</h1>
+    <h1>Quiniela — Jornada 5</h1>
 
     <label>Tipo de quiniela:
       <select id="tipoQuiniela">
@@ -54,10 +54,10 @@
     </div>
 
     <div class="card" style="margin-top:12px">
-      <h3>Pleno al 15 — RAYO vs BARCELONA (elige goles para cada equipo)</h3>
+      <h3>Pleno al 15 — ESPANYOL vs MALLORCA (elige goles para cada equipo)</h3>
       <div style="display:flex;gap:12px;align-items:center">
         <div>
-          <div class="small">Local (RAYO)</div>
+          <div class="small">Local (ESPANYOL)</div>
           <select id="plenoLocal">
             <option value="">--</option>
             <option value="0">0</option>
@@ -67,7 +67,7 @@
           </select>
         </div>
         <div>
-          <div class="small">Visitante (BARCELONA)</div>
+          <div class="small">Visitante (MALLORCA)</div>
           <select id="plenoVisitante">
             <option value="">--</option>
             <option value="0">0</option>
@@ -88,21 +88,21 @@
 <script>
 // === PARTIDOS oficiales ===
 const matches = [
-  {id:1, home:'ALAVÉS', away:'AT.MADRID'},
-  {id:2, home:'R.OVIEDO', away:'R.SOCIEDAD'},
-  {id:3, home:'GIRONA', away:'SEVILLA'},
-  {id:4, home:'R.MADRID', away:'MALLORCA'},
-  {id:5, home:'CELTA', away:'VILLARREAL'},
-  {id:6, home:'BETIS', away:'ATH.CLUB'},
-  {id:7, home:'ESPANYOL', away:'OSASUNA'},
-  {id:8, home:'RACING S.', away:'CEUTA'},
-  {id:9, home:'VALLADOLID', away:'CÓRDOBA'},
-  {id:10, home:'CASTELLÓN', away:'R.ZARAGOZA'},
-  {id:11, home:'ANDORRA FC', away:'BURGOS'},
-  {id:12, home:'CÁDIZ', away:'ALBACETE'},
-  {id:13, home:'LAS PALMAS', away:'MÁLAGA'},
-  {id:14, home:'GRANADA', away:'MIRANDÉS'},
-  {id:15, home:'RAYO', away:'BARCELONA'}
+  {id:1, home:'GETAFE', away:'R.OVIEDO'},
+  {id:2, home:'LEVANTE', away:'BETIS'},
+  {id:3, home:'AT.MADRID', away:'VILLARREAL'},
+  {id:4, home:'BARCELONA', away:'VALENCIA'},
+  {id:5, home:'ATH.CLUB', away:'ALAVÉS'},
+  {id:6, home:'R.SOCIEDAD', away:'R.MADRID'},
+  {id:7, home:'CELTA', away:'GIRONA'},
+  {id:8, home:'OSASUNA.', away:'RAYO'},
+  {id:9, home:'CÁDIZ', away:'EIBAR'},
+  {id:10, home:'MIRANDÉS', away:'DEPORTIVO'},
+  {id:11, home:'HUESCA', away:'MÁLAGA'},
+  {id:12, home:'VALLADOLID', away:'ALMERÍA'},
+  {id:13, home:'SPORTING', away:'BURGOS'},
+  {id:14, home:'GRANADA', away:'LEGANÉS'},
+  {id:15, home:'ESPANYOL', away:'MALLORCA'}
 ];
 
 const matchesBody = document.getElementById('matchesBody');
