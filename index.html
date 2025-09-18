@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Quiniela — Jornada 7</title>
+  <title>Quiniela — Jornada 5</title>
   <style>
     body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:20px;background:#f7fafc}
     .card{background:#fff;padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(10,10,10,0.06);margin-bottom:16px}
@@ -19,15 +19,20 @@
 </head>
 <body>
   <div class="card">
-    <h1>Quiniela — Jornada 7</h1>
+    <h1>Quiniela — Jornada 5</h1>
 
     <label>Tipo de quiniela:
       <select id="tipoQuiniela">
         <!-- Reducción al 13 con columna base-->
         <option value="13_1t_5d">Reducida al 13 — 1 triple y 5 dobles (con columna base)</option>
+        <option value="13_0t_7d">Reducida al 13 — 0 triples y 7 dobles (con columna base)</option>
 
         <!-- Reducción al 12 con columna base-->
-        <option value="12_2t_7d">Reducida al 12 — 2 triples y 7 dobles (con columna base)</option>
+        <option value="12_0t_9d">Reducida al 12 — 0 triples y 9 dobles (con columna base)</option>
+        <option value="12_0t_10d">Reducida al 12 — 0 triples y 10 dobles (con columna base)</option>
+        <option value="12_2t_6d">Reducida al 12 — 2 triples y 6 dobles (con columna base)</option>
+        <option value="12_2t_5d">Reducida al 12 — 2 triples y 5 dobles (con columna base)</option>
+        <option value="12_5t_2d">Reducida al 12 — 5 triples y 2 dobles (con columna base)</option>
       </select>
     </label>
 
@@ -48,7 +53,7 @@
       </table>
     </div>
 
-    <div class="card" style="margin-top:12px">
+        <div class="card" style="margin-top:12px">
       <h3>Pleno al 15 — VALENCIA vs ATH.CLUB (elige goles para cada equipo)</h3>
       <div style="display:flex;gap:12px;align-items:center">
         <div>
@@ -206,9 +211,14 @@ buildTable();
 const mapping = {
   // Reducción al 13 (columna base)
   '13_1t_5d': {triples:1, doubles:5},
+  '13_0t_7d': {triples:0, doubles:7},
 
   // Reducción al 12 (columna base) - opciones solicitadas (únicas)
-  '12_2t_7d':  {triples:2, doubles:7}
+  '12_0t_9d':  {triples:0, doubles:9},
+  '12_0t_10d': {triples:0, doubles:10},
+  '12_2t_6d':  {triples:2, doubles:6},
+  '12_2t_5d':  {triples:2, doubles:5},
+  '12_5t_2d':  {triples:5, doubles:2}
 };
 
 document.getElementById('sendBtn').addEventListener('click', async ()=>{
