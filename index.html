@@ -53,7 +53,41 @@
       </table>
     </div>
 
-       const matches = [
+<div class="card" style="margin-top:12px">
+  <h3>Pleno al 15 — AT.MADRID vs R.MADRID (elige goles para cada equipo)</h3>
+  <div style="display:flex;gap:12px;align-items:center">
+    <div>
+      <div class="small">Local (AT.MADRID)</div>
+      <select id="plenoLocal">
+        <option value="">--</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="M">M</option>
+      </select>
+    </div>
+    <div>
+      <div class="small">Visitante (R.MADRID)</div>
+      <select id="plenoVisitante">
+        <option value="">--</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="M">M</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+  <button id="sendBtn">Enviar a Google Sheets</button>
+  <div id="status" class="small"></div>
+</div>
+</div>
+
+<script>
+// === PARTIDOS jornada 9 ===
+const matches = [
   {id:1, home:'GETAFE', away:'LEVANTE'},
   {id:2, home:'MALLORCA', away:'ALAVÉS'},
   {id:3, home:'VILLARREAL', away:'ATH.CLUB'},
@@ -70,7 +104,6 @@
   {id:14, home:'SPORTING', away:'ALBACETE'},
   {id:15, home:'AT.MADRID', away:'R.MADRID'}
 ];
-
 
 const matchesBody = document.getElementById('matchesBody');
 
